@@ -9,5 +9,5 @@ $connection = new mysqli($servername,$username,$password,$db_name);
 if($connection->connect_error){
     die("connection failed".$connection->connect_error);
 }else{
-    echo"connection good";
+    // echo"connection good";
 }
