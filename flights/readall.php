@@ -3,7 +3,7 @@ require "../connection.php";
 
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $flight_number = $_Get["flight_number"];
-// ~:
+
     $stmt = $connection->prepare('select * from flights where flight_number=?;');
     $stmt->bind_param('s', $flight_number);
     $stmt->execute();
