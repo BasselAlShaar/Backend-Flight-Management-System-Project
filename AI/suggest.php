@@ -45,7 +45,7 @@ class OpenAIHandler
     }
 }
 
-$apiKey = 'sk-proj-Aipe7uZ3TkOh1sVA72IqT3BlbkFJA5f1uFownfs7cO1SxM0G'; 
+$apiKey = 'sk-proj-ultM6ETqcTgfWnudgzAHT3BlbkFJaKBvjgN8W8z5ZCbbF0JX'; 
 
 $openAIHandler = new OpenAIHandler($apiKey);
 
