@@ -2,7 +2,7 @@
 session_start();
 require '../connection.php';
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] == "POST" && !isset($_SESSION['loggedin'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
@@ -17,6 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $stmt->fetch();
     $user_exists = $stmt->num_rows;
 
+    $stmt2 = $connection->prepare('select id_admin,email,password,username
+                from admins where email=?');
+    $stmt2->bind_param('s', $email);
+    $stmt2->execute();
+    $stmt2->store_result();
+    $stmt2->bind_result($id_admin, $email, $pass, $username);
+    $stmt2->fetch();
+    $admin_exists = $stmt2->num_rows;
+    if ($admin_exists != 0) {
+        if ($password === $pass) {
+            $_SESSION['isAdmin'] = true;
+            $res['admin'] = $_SESSION['isAdmin'];
+        }
+    }
+
     if ($user_exists == 0) {
         $res['message'] = "user not found";
     } else {
@@ -30,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $_SESSION['email'] = $email;
             $_SESSION['username'] = $username;
             $_SESSION['loggedin'] = true;
+            echo json_encode($res);
         } else {
             $res['status'] = "wrong password";
         }
