@@ -1,8 +1,8 @@
 <?php
-
+session_start();
 require '../connection.php';
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] == "POST" ) {
     
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $check_email->bind_param('ss', $username, $email);
     $check_email->execute();
     $result = $check_email->get_result();
+
 
     if ($result->num_rows > 0) {
         echo json_encode(["error" => "Already exists"]);
@@ -29,6 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $res['status'] = "success";
         $res['message'] = "inserted successfully";
 
+        $stmt2 = $connection->prepare('select id_user from users where email=?;');
+        $stmt2->bind_param('s', $email);
+        $stmt2->execute();
+        $stmt2->store_result();
+        $stmt2->bind_result($id_user);
+        $stmt2->fetch();
+
+        $_SESSION['id_user'] = $id_user;
         $_SESSION['email'] = $email;
         $_SESSION['username'] = $username;
         $_SESSION['loggedin'] = true;
